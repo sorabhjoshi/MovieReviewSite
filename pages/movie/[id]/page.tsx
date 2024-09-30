@@ -2,26 +2,21 @@ import { useRouter } from 'next/router';
 import { trpc } from '../../../utils/trpc'; 
 import Link from 'next/link';
 
-interface Movie {
-  id: number;
-  name: string;
-  releaseDate: string;
-  averageRating: number;
-  reviews: Review[];
-}
-
 interface Review {
   id: number;
   movieId: number;
-  reviewerName: string;
+  reviewerName: string | null; // Allow null for reviewerName
   rating: number;
   comments: string;
 }
+
+
 
 export default function MovieDetails() {
   const router = useRouter();
   const { id } = router.query;
 
+  // Ensure the TRPC query matches the setup in your router
   const { data: movie, isLoading, isError } = trpc.getMovie.useQuery(Number(id), {
     enabled: !!id, 
   });

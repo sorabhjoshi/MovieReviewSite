@@ -27,10 +27,12 @@ export default function AddMovie() {
       return;
     }
 
-    const payload = { name, releaseDate: parsedReleaseDate };
-    console.log("Payload:", payload);
+    const formattedReleaseDate = parsedReleaseDate.toISOString().split('T')[0];
 
-    mutation.mutate(payload);
+  const payload = { name, releaseDate: formattedReleaseDate }; // pass the release date as a string
+  console.log("Payload:", payload);
+
+  mutation.mutate(payload);
   };
 
   return (

@@ -6,12 +6,20 @@ const prisma = new PrismaClient();
 const t = initTRPC.create();
 
 export const appRouter = t.router({
- 
   getMovies: t.procedure.query(async () => {
     return await prisma.movie.findMany();
   }),
   
- 
+  // Update the getMovie query to accept an input parameter (movie ID)
+  getMovie: t.procedure
+    .input(z.number()) // Expecting a number input for the movie ID
+    .query(async ({ input }) => {
+      return await prisma.movie.findUnique({
+        where: { id: input }, // Fetch the movie by ID
+        include: { reviews: true } // Optionally include reviews if needed
+      });
+    }),
+
   createMovie: t.procedure
     .input(
       z.object({
@@ -22,7 +30,6 @@ export const appRouter = t.router({
     .mutation(async ({ input }) => {
       return await prisma.movie.create({ data: input });
     }),
-
 
   createReview: t.procedure
     .input(z.object({
@@ -37,7 +44,6 @@ export const appRouter = t.router({
       return review;
     }),
 
-  
   searchReviews: t.procedure.input(z.string()).query(async ({ input }) => {
     return await prisma.review.findMany({
       where: {
@@ -49,6 +55,7 @@ export const appRouter = t.router({
       include: { movie: true },
     });
   }),
+
   getMovieReviews: t.procedure
     .input(z.number())
     .query(async ({ input: movieId }) => {
@@ -58,7 +65,6 @@ export const appRouter = t.router({
       });
     }),
 
- 
   updateReview: t.procedure
     .input(z.object({
       id: z.number(),
@@ -75,15 +81,13 @@ export const appRouter = t.router({
       return updatedReview;
     }),
 
-    deleteMovie: t.procedure
+  deleteMovie: t.procedure
     .input(z.number())
     .mutation(async ({ input: movieId }) => {
-      
       await prisma.review.deleteMany({
         where: { movieId },
       });
 
-    
       const deletedMovie = await prisma.movie.delete({
         where: { id: movieId },
       });
@@ -100,13 +104,13 @@ export const appRouter = t.router({
       await updateAverageRating(deletedReview.movieId);
       return deletedReview;
     }),
-
 });
-
 
 async function updateAverageRating(movieId: number) {
   const reviews = await prisma.review.findMany({ where: { movieId } });
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  const averageRating = reviews.length > 0
+    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+    : null; // Handle case when there are no reviews
   await prisma.movie.update({
     where: { id: movieId },
     data: { averageRating },

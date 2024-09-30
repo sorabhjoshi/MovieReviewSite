@@ -7,6 +7,13 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 
 export default function MovieReviews({ params }: { params: { id: string } }) {
   const movieId = parseInt(params.id)
+  type Review = {
+    id: number;
+    reviewerName: string | null; // Change to string | null
+    rating: number;
+    comments: string;
+    movie: { name: string; }; // Assuming the movie object contains a name property
+  };
   const { data: reviews, refetch } = trpc.getMovieReviews.useQuery(movieId)
   const updateReviewMutation = trpc.updateReview.useMutation()
   const deleteReviewMutation = trpc.deleteReview.useMutation()
@@ -18,7 +25,7 @@ export default function MovieReviews({ params }: { params: { id: string } }) {
     comments: '',
   })
 
-  const handleEdit = (review: any) => {
+  const handleEdit = (review: Review) => {
     setEditingReview(review.id)
     setEditedReview({
       reviewerName: review.reviewerName || '',

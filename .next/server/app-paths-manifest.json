@@ -1,7 +1,9 @@
 {
-  "/movie/[id]/reviews/page": "app/movie/[id]/reviews/page.js",
-  "/page": "app/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/add-movie/page": "app/add-movie/page.js",
   "/add-review/page": "app/add-review/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/add-movie/page": "app/add-movie/page.js"
+  "/movie/[id]/reviews/page": "app/movie/[id]/reviews/page.js",
+  "/page": "app/page.js",
+  "/search-reviews/page": "app/search-reviews/page.js"
 }

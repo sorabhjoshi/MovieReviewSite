@@ -1,6 +1,9 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/api/trpc/[trpc]": "pages/api/trpc/[trpc].js"
+  "/api/logging": "pages/api/logging.js",
+  "/api/movies": "pages/api/movies.js",
+  "/api/trpc/[trpc]": "pages/api/trpc/[trpc].js",
+  "/movie/[id]/page": "pages/movie/[id]/page.js",
+  "/_document": "pages/_document.js"
 }
